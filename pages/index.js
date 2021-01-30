@@ -1,10 +1,16 @@
-import styled from 'styled-components'
+
+//módulos estão dentro da pasta node_modules
+import styled from 'styled-components';
+import Head from 'next/head';
+import { useRouter } from 'next/router'; //next Js
+//fim dos módulos que estão na pasta node_modules
+
 import db from '../db.json';
-import Widget from '../src/components/Widget'
-import QuizLogo from '../src/components/QuizLogo'
-import QuizBackground from '../src/components/QuizBackground'
-import Footer from '../src/components/footer'
-import GitHubCorner from '../src/components/GitHubCorner'
+import Widget from '../src/components/Widget';
+import QuizLogo from '../src/components/QuizLogo';
+import QuizBackground from '../src/components/QuizBackground';
+import Footer from '../src/components/footer';
+import GitHubCorner from '../src/components/GitHubCorner';
 
 // const BackgroundImage = styled.div`
 //   background-image: url(${db.bg});
@@ -22,11 +28,19 @@ export const QuizContainer = styled.div`
     margin: auto;
     padding: 15px;
   }
-`;
+  `;
+  
+  export default function Home() {
+    const router = useRouter();
+    const [name, setName] = React.useState('');
+    // console.log(e.target.value);
+  
 
-export default function Home() {
   return (
     <QuizBackground backgroundImage={db.bg}>
+      <Head>
+        <title>Quiz SP</title>
+      </Head>
       <QuizContainer>
         <QuizLogo />
         <Widget>
@@ -34,9 +48,24 @@ export default function Home() {
             <h1>{db.title}</h1>
           </Widget.Header>
           <Widget.Content>
-            <p>{db.description}</p>
+            <form onSubmit={function (e){
+              e.preventDefault();
+              router.push(`/quiz?name=${name}`)
+              console.log('fazendo uma submissão por meio do react')
+            }}>
+            <input 
+              onChange={function(e){
+                console.log(e.target.value);
+                setName(e.target.value);
+              }}
+            
+            placeholder="Digite seu nome"/>
+
+            <button type="submit" disabled={name.lenght === 0}>
+              Pronto! {name}</button>
+            </form>
           </Widget.Content>
-        </Widget>
+        </Widget> 
 
         <Widget>
           <Widget.Content>
@@ -47,7 +76,7 @@ export default function Home() {
         </Widget>
         <Footer />
       </QuizContainer>
-      <GitHubCorner projectUrl="https://github.com/omariosouto" />
+      <GitHubCorner projectUrl="https://github.com/g-ars" />
     </QuizBackground>
   );
 }
